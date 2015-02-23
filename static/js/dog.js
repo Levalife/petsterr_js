@@ -26,13 +26,17 @@ var dog = {
     },
     news: [{author: 'greenday', content: 'la la la lala la lala la lala la la', created_ar: '12.03.2012'},
         {author: 'greenday', content: 'bla la la lala la labla bla bla la labla  lala la la', created_ar: '12.03.2012'},
-        {author: 'greenday', content: 'cla cla la lala la lacla bla cbla la lacla  lala cla la', created_ar: '12.03.2012'}]
+        {
+            author: 'greenday',
+            content: 'cla cla la lala la lacla bla cbla la lacla  lala cla la',
+            created_ar: '12.03.2012'
+        }]
 };
 
 var breeds = [
-    {title: 'White Swiss Shepherd', value:'wss', url: ''},
-    {title: 'German Shepherd', value:'gs', url: ''},
-    {title: 'Golder Retriever', value:'gr', url: ''}];
+    {title: 'White Swiss Shepherd', value: 'wss', url: ''},
+    {title: 'German Shepherd', value: 'gs', url: ''},
+    {title: 'Golder Retriever', value: 'gr', url: ''}];
 
 var PageBlock = React.createClass({
     render: function () {
@@ -107,7 +111,7 @@ var MainBlock = React.createClass({
 
 var MenuChoiceBlock = React.createClass({
     render: function () {
-        return <li className={this.props.class} onClick={this.props.chooseMenu.bind(this.props.self, this.props.index)}>{this.props.title}</li>
+        return <li className={this.props.class} onClick={this.props.chooseMenu.bind(this.props.self, this.props.index)} data-index={this.props.index}> {this.props.title}</li>
     }
 });
 
@@ -118,16 +122,16 @@ var MenuInfoBlock = React.createClass({
             text = 'Some news'
         }
         if (this.props.text == 1) {
-            text = <InfoPetBlock />
+            text = <InfoPetBlock index={this.props.index} />
         }
         if (this.props.text == 2) {
-            text = <PedigreePetBlock />
+            text = <PedigreePetBlock index={this.props.index} />
         }
         if (this.props.text == 3) {
-            text = <AchievementsPetBlock />
+            text = <AchievementsPetBlock index={this.props.index} />
         }
         if (this.props.text == 4) {
-            text = <HealthPetBlock />
+            text = <HealthPetBlock index={this.props.index} />
         }
         return <div className={this.props.class} id={'tab_' + this.props.index} >{text}</div>
     }
@@ -143,15 +147,19 @@ var InfoPetBlock = React.createClass({
             }
         }
     },
-    componentWillUnmount: function () {
-        this.setState({show_form: false});
+
+    componentWillUpdate: function () {
+        var index = $('.active').data('index');
+        if (this.state.show_form == true && index != this.props.index) {
+            this.cancelShowForm();
+        }
     },
 
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
     },
 
-    initChange: function (e, key) {
+    initChange: function (key, e) {
         var new_form = this.state.form;
         new_form[key] = e.target.value;
         this.setState({form: new_form});
@@ -162,9 +170,25 @@ var InfoPetBlock = React.createClass({
         var new_value = this.refs[key].getDOMNode().value;
         new_form[key] = new_value;
         this.setState({form: new_form});
-        console.log(this.state.form);
-
     },
+
+    cancelShowForm: function () {
+        this.setState({
+            show_form: false,
+            form: {
+                full_name: dog.full_name.value, home_name: dog.home_name.value,
+                birthday: dog.birthday.value, gender: dog.gender.value, kennel_of_live: dog.kennel_of_live.value,
+                breed: dog.breed.value, color: dog.color.value, height: dog.height.value
+            }
+        });
+    },
+
+    submitForm: function () {
+        var data = this.state.form;
+        console.log(data);
+        this.setState({show_form: false});
+    },
+
     render: function () {
         var self = this;
         var content;
@@ -210,8 +234,8 @@ var InfoPetBlock = React.createClass({
                     <input type="text" name="height" id="id_height" value={self.state.form.height} onChange={self.initChange.bind(self, 'height')}/>
                 </div>
                 <div className="info-row">
-                    <input type="button" value="Save"/>
-                    <input type="button" onClick={self.changeShowForm} value="Cancel"/>
+                    <input type="button" onClick={self.submitForm} value="Save"/>
+                    <input type="button" onClick={self.cancelShowForm} value="Cancel"/>
                 </div>
             </form>
         } else {
@@ -269,15 +293,40 @@ var PedigreePetBlock = React.createClass({
         };
     },
 
+    componentWillUpdate: function () {
+        var index = $('.active').data('index');
+        if (this.state.show_form == true && index != this.props.index) {
+            this.cancelShowForm();
+        }
+    },
+
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
     },
 
-    initChange: function (e, key) {
+    initChange: function (key, e) {
         var new_form = this.state.form;
         new_form[key] = e.target.value;
         this.setState({form: new_form});
     },
+
+    cancelShowForm: function () {
+        this.setState({
+            show_form: false,
+            form: {
+                mother: dog.mother_name.value, father: dog.father_name.value,
+                kennel_of_birth: dog.kennel_of_birth.value, registry: dog.registry.value, tattoo: dog.tattoo.value,
+                microchip: dog.microchip.value
+            }
+        });
+    },
+
+    submitForm: function () {
+        var data = this.state.form;
+        console.log(data);
+        this.setState({show_form: false});
+    },
+
     render: function () {
         var self = this;
         var content;
@@ -285,7 +334,7 @@ var PedigreePetBlock = React.createClass({
             content = <form>
                 <div className="info-row">
                     <div className="label">{dog.mother_name.title}:</div>
-                    <input type="date" name="mother" id="id_mother" value={self.state.form.mother} onChange={self.initChange.bind(self, 'mother')}/>
+                    <input type="text" name="mother" id="id_mother" value={self.state.form.mother} onChange={self.initChange.bind(self, 'mother')}/>
                 </div>
                 <div className="info-row">
                     <div className="label">{dog.father_name.title}:</div>
@@ -308,8 +357,8 @@ var PedigreePetBlock = React.createClass({
                     <input type="text" name="microchip" id="id_microchip" value={self.state.form.microchip} onChange={self.initChange.bind(self, 'microchip')}/>
                 </div>
                 <div className="info-row">
-                    <input type="button" value="Save"/>
-                    <input type="button" onClick={self.changeShowForm} value="Cancel"/>
+                    <input type="button" onClick={self.submitForm} value="Save"/>
+                    <input type="button" onClick={self.cancelShowForm} value="Cancel"/>
                 </div>
             </form>
         } else {
@@ -350,14 +399,37 @@ var AchievementsPetBlock = React.createClass({
         return {show_form: false, form: {entitlements: dog.entitlements.value, achievements: dog.achievements.value}}
     },
 
+    componentWillUpdate: function () {
+        var index = $('.active').data('index');
+        if (this.state.show_form == true && index != this.props.index) {
+            this.cancelShowForm();
+        }
+    },
+
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
     },
 
-    initChange: function (e, key) {
+    initChange: function (key, e) {
         var new_form = this.state.form;
         new_form[key] = e.target.value;
         this.setState({form: new_form});
+    },
+
+    cancelShowForm: function () {
+        this.setState({
+            show_form: false,
+            form: {
+                entitlements: dog.entitlements.value,
+                achievements: dog.achievements.value
+            }
+        });
+    },
+
+    submitForm: function () {
+        var data = this.state.form;
+        console.log(data);
+        this.setState({show_form: false});
     },
     render: function () {
         var self = this;
@@ -366,15 +438,15 @@ var AchievementsPetBlock = React.createClass({
             content = <form>
                 <div className="info-row">
                     <div className="label">{dog.entitlements.title}:</div>
-                    <textarea name="entitlements" onChange={self.initChange.bind(self, 'entitlements')}>{self.state.form.entitlements}</textarea>
+                    <textarea name="entitlements" onChange={self.initChange.bind(self, 'entitlements')} value={self.state.form.entitlements}></textarea>
                 </div>
                 <div className="info-row">
                     <div className="label">{dog.achievements.title}:</div>
-                    <textarea name="achievements" onChange={self.initChange.bind(self, 'entitlements')}>{self.state.form.achievements}</textarea>
+                    <textarea name="achievements" onChange={self.initChange.bind(self, 'achievements')} value={self.state.form.achievements}></textarea>
                 </div>
                 <div className="info-row">
-                    <input type="button" value="Save"/>
-                    <input type="button" onClick={self.changeShowForm} value="Cancel"/>
+                    <input type="button" onClick={self.submitForm} value="Save"/>
+                    <input type="button" onClick={self.cancelShowForm} value="Cancel"/>
                 </div>
             </form>
         } else {
@@ -399,13 +471,29 @@ var HealthPetBlock = React.createClass({
         return {show_form: false, form: {health: dog.health.value}}
     },
 
+    componentWillUpdate: function () {
+        var index = $('.active').data('index');
+        if (this.state.show_form == true && index != this.props.index) {
+            this.cancelShowForm();
+        }
+    },
+
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
     },
-    initChange: function (e, key) {
+
+    cancelShowForm: function () {
+        this.setState({show_form: false, form: {health: dog.health.value}});
+    },
+    initChange: function (key, e) {
         var new_form = this.state.form;
         new_form[key] = e.target.value;
         this.setState({form: new_form});
+    },
+    submitForm: function () {
+        var data = this.state.form;
+        console.log(data);
+        this.setState({show_form: false});
     },
     render: function () {
         var self = this;
@@ -414,11 +502,11 @@ var HealthPetBlock = React.createClass({
             content = <form>
                 <div className="info-row">
                     <div className="label">{dog.health.title}:</div>
-                    <textarea name="health" onChange={self.initChange.bind(self, 'health')}>{self.state.form.health}</textarea>
+                    <textarea name="health" defaultValue={self.state.form.health} onChange={self.initChange.bind(self, 'health')}/>
                 </div>
                 <div className="info-row">
-                    <input type="button" value="Save"/>
-                    <input type="button" onClick={self.changeShowForm} value="Cancel"/>
+                    <input type="button" onClick={self.submitForm} value="Save"/>
+                    <input type="button" onClick={self.cancelShowForm} value="Cancel"/>
                 </div>
             </form>
         } else {
@@ -441,7 +529,6 @@ var FooterBlock = React.createClass({
         </div>;
     }
 });
-
 
 React.render(
     <PageBlock />,
