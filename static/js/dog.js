@@ -24,12 +24,21 @@ var dog = {
         title: 'Health',
         value: 'Health Something About Health Something About Health Something About Health Something About '
     },
-    news: [{author: 'greenday', content: 'la la la lala la lala la lala la la', created_ar: '12.03.2012'},
-        {author: 'greenday', content: 'bla la la lala la labla bla bla la labla  lala la la', created_ar: '12.03.2012'},
+    news: [
+        {
+            author: 'greenday',
+            content: 'la la la lala la lala la lala la la',
+            created_at: '12.03.2012'
+        },
+        {
+            author: 'greenday',
+            content: 'bla la la lala la labla bla bla la labla  lala la la',
+            created_at: '12.03.2012'
+        },
         {
             author: 'greenday',
             content: 'cla cla la lala la lacla bla cbla la lacla  lala cla la',
-            created_ar: '12.03.2012'
+            created_at: '12.03.2012'
         }]
 };
 
@@ -82,7 +91,7 @@ var MainBlock = React.createClass({
             if (self.state.active == index) {
                 style = 'show';
             }
-            return <MenuInfoBlock class={style} text={index} index={index}/>
+            return <MenuInfoBlock class={style} index={index}/>
         });
         return <div className="main-block">
             <div className="image-cropper">
@@ -90,7 +99,7 @@ var MainBlock = React.createClass({
             </div>
 
             <div className="name-block">
-                <div className="container">Nathan Drake Snow Avalanche | Nathan</div>
+                <div className="container">{dog.full_name.value} | {dog.home_name.value}</div>
             </div>
             <div className="container">
                 <div className="content-block">
@@ -117,23 +126,79 @@ var MenuChoiceBlock = React.createClass({
 
 var MenuInfoBlock = React.createClass({
     render: function () {
-        var text;
-        if (this.props.text == 0) {
-            text = 'Some news'
+        var text,
+            self=this;
+        if (this.props.index == 0) {
+            text = <NewsBlock index={self.props.index} />
         }
-        if (this.props.text == 1) {
-            text = <InfoPetBlock index={this.props.index} />
+        if (this.props.index == 1) {
+            text = <InfoPetBlock index={self.props.index} />
         }
-        if (this.props.text == 2) {
-            text = <PedigreePetBlock index={this.props.index} />
+        if (this.props.index == 2) {
+            text = <PedigreePetBlock index={self.props.index} />
         }
-        if (this.props.text == 3) {
-            text = <AchievementsPetBlock index={this.props.index} />
+        if (this.props.index == 3) {
+            text = <AchievementsPetBlock index={self.props.index} />
         }
-        if (this.props.text == 4) {
-            text = <HealthPetBlock index={this.props.index} />
+        if (this.props.index == 4) {
+            text = <HealthPetBlock index={self.props.index} />
         }
-        return <div className={this.props.class} id={'tab_' + this.props.index} >{text}</div>
+        return <div className={self.props.class} id={'tab_' + self.props.index} >{text}</div>
+    }
+});
+
+var NewsBlock = React.createClass({
+    render: function () {
+        return <div>
+            <NewsForm index={this.props.index}/>
+            {dog.news.map(function (item) {
+                return <NewsItemBlock item={item} />
+            })}
+        </div>;
+    }
+});
+
+var NewsForm = React.createClass({
+    getInitialState: function () {
+        return {content: ''}
+    },
+
+    componentWillUpdate: function () {
+        var index = $('.active').data('index');
+        if (index != this.props.index && this.state.content != '') {
+            this.setState({content: ''});
+        }
+    },
+
+    initChange: function (e) {
+        this.setState({content: e.target.value});
+    },
+
+    submitForm: function () {
+        var data = {content: this.state.content};
+        console.log(data);
+    },
+
+    render: function () {
+        var self = this;
+        return <form className="news-form-block">
+            <textarea name="content" id="id_content" value={self.state.content} onChange={self.initChange}></textarea>
+            <div className="info-row">
+                <input type="button" onClick={self.submitForm} value="Save"/>
+            </div>
+        </form>
+    }
+});
+
+var NewsItemBlock = React.createClass({
+    render: function () {
+        return <div className="news-item-block">
+        {this.props.item.content}
+            <div className="news-item-footer">
+                <span className="created-at">{this.props.item.created_at}</span>
+                <span className="author">{this.props.item.author}</span>
+            </div>
+        </div>
     }
 });
 
