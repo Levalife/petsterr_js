@@ -1,0 +1,147 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.container {
+    width: 900px;
+    margin: 0 auto;
+}
+
+.navbar {
+    height: 50px;
+    width: 100%;
+    background-color: #a5967a;
+    color: #ededed;
+    line-height: 50px;
+}
+
+.navbar .logo {
+    vertical-align: middle;
+    font-size: 28px;
+}
+
+.main-block {
+    background-color: #ededed ;
+    width: 100%;
+    height: 100%;
+}
+
+.main-block .name-block {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    /*font-family: Roboto Slab;*/
+    background-color: #d9d8cf;
+    color: #a5967a ;
+    font-size: 20px;
+}
+
+.main-block .content-block {
+    background-color: #fff;
+    min-height: 100px;
+    margin: 20px 0;
+    display: flex;
+}
+
+.main-block .content-block .control-block {
+    width: 30%;
+    background-color: #5d6369;
+    color: #e4e7ea;
+}
+
+.main-block .content-block .control-block ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-block .content-block .control-block ul li {
+    padding: 20px 40px;
+    font-size: 20px;
+}
+
+.main-block .content-block .control-block ul li:hover {
+    cursor: pointer;
+    background-color: #909498;
+}
+
+.main-block .content-block .control-block .active {
+    background-color: #909498;
+}
+
+.main-block .content-block .info-block {
+    color: #909498;
+    padding: 20px;
+    width: 70%;
+    position: relative;
+}
+
+.main-block .content-block .info-block .edit-pet-button {
+    width: 25px;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+.main-block .content-block .info-block .edit-pet-button:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.main-block .content-block .info-block .info-row {
+    margin-bottom: 20px;
+}
+
+.main-block .content-block .info-block .info-row input[type="text"],
+.main-block .content-block .info-block .info-row input[type="date"],
+.main-block .content-block .info-block .info-row select,
+.main-block .content-block .info-block .info-row textarea {
+    width: 70%;
+    padding: 4px 10px;
+}
+
+.main-block .content-block .info-block .info-row textarea {
+    resize: vertical;
+    min-height: 200px;
+}
+
+.main-block .content-block .info-block .info-row select {
+    width: 74%;
+}
+
+.main-block .content-block .info-block .label {
+    display: inline-block;
+    width: 150px;
+    vertical-align: top;
+}
+
+.info-block #tab_0, .info-block #tab_1, .info-block #tab_2, .info-block #tab_3, .info-block #tab_4 {
+    display: none;
+}
+
+
+.info-block .show {
+    display: block!important;
+}
+.image-cropper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    /*border: 1px red solid;*/
+}
+
+.dog-photo {
+    width: 100%;
+}
+
+.footer-block {
+    width: 100%;
+    height: 50px;
+    background-color: #535d6d  ;
+    color: #e4e7ea;
+    padding: 0 20px;
+}
