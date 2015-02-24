@@ -24,12 +24,21 @@ var dog = {
         title: 'Health',
         value: 'Health Something About Health Something About Health Something About Health Something About '
     },
-    news: [{author: 'greenday', content: 'la la la lala la lala la lala la la', created_ar: '12.03.2012'},
-        {author: 'greenday', content: 'bla la la lala la labla bla bla la labla  lala la la', created_ar: '12.03.2012'},
+    news: [
+        {
+            author: 'greenday',
+            content: 'la la la lala la lala la lala la la',
+            created_at: '12.03.2012'
+        },
+        {
+            author: 'greenday',
+            content: 'bla la la lala la labla bla bla la labla  lala la la',
+            created_at: '12.03.2012'
+        },
         {
             author: 'greenday',
             content: 'cla cla la lala la lacla bla cbla la lacla  lala cla la',
-            created_ar: '12.03.2012'
+            created_at: '12.03.2012'
         }]
 };
 
@@ -82,7 +91,7 @@ var MainBlock = React.createClass({displayName: "MainBlock",
             if (self.state.active == index) {
                 style = 'show';
             }
-            return React.createElement(MenuInfoBlock, {class: style, text: index, index: index})
+            return React.createElement(MenuInfoBlock, {class: style, index: index})
         });
         return React.createElement("div", {className: "main-block"}, 
             React.createElement("div", {className: "image-cropper"}, 
@@ -90,7 +99,7 @@ var MainBlock = React.createClass({displayName: "MainBlock",
             ), 
 
             React.createElement("div", {className: "name-block"}, 
-                React.createElement("div", {className: "container"}, "Nathan Drake Snow Avalanche | Nathan")
+                React.createElement("div", {className: "container"}, dog.full_name.value, " | ", dog.home_name.value)
             ), 
             React.createElement("div", {className: "container"}, 
                 React.createElement("div", {className: "content-block"}, 
@@ -117,23 +126,79 @@ var MenuChoiceBlock = React.createClass({displayName: "MenuChoiceBlock",
 
 var MenuInfoBlock = React.createClass({displayName: "MenuInfoBlock",
     render: function () {
-        var text;
-        if (this.props.text == 0) {
-            text = 'Some news'
+        var text,
+            self=this;
+        if (this.props.index == 0) {
+            text = React.createElement(NewsBlock, {index: self.props.index})
         }
-        if (this.props.text == 1) {
-            text = React.createElement(InfoPetBlock, {index: this.props.index})
+        if (this.props.index == 1) {
+            text = React.createElement(InfoPetBlock, {index: self.props.index})
         }
-        if (this.props.text == 2) {
-            text = React.createElement(PedigreePetBlock, {index: this.props.index})
+        if (this.props.index == 2) {
+            text = React.createElement(PedigreePetBlock, {index: self.props.index})
         }
-        if (this.props.text == 3) {
-            text = React.createElement(AchievementsPetBlock, {index: this.props.index})
+        if (this.props.index == 3) {
+            text = React.createElement(AchievementsPetBlock, {index: self.props.index})
         }
-        if (this.props.text == 4) {
-            text = React.createElement(HealthPetBlock, {index: this.props.index})
+        if (this.props.index == 4) {
+            text = React.createElement(HealthPetBlock, {index: self.props.index})
         }
-        return React.createElement("div", {className: this.props.class, id: 'tab_' + this.props.index}, text)
+        return React.createElement("div", {className: self.props.class, id: 'tab_' + self.props.index}, text)
+    }
+});
+
+var NewsBlock = React.createClass({displayName: "NewsBlock",
+    render: function () {
+        return React.createElement("div", null, 
+            React.createElement(NewsForm, {index: this.props.index}), 
+            dog.news.map(function (item) {
+                return React.createElement(NewsItemBlock, {item: item})
+            })
+        );
+    }
+});
+
+var NewsForm = React.createClass({displayName: "NewsForm",
+    getInitialState: function () {
+        return {content: ''}
+    },
+
+    componentWillUpdate: function () {
+        var index = $('.active').data('index');
+        if (index != this.props.index && this.state.content != '') {
+            this.setState({content: ''});
+        }
+    },
+
+    initChange: function (e) {
+        this.setState({content: e.target.value});
+    },
+
+    submitForm: function () {
+        var data = {content: this.state.content};
+        console.log(data);
+    },
+
+    render: function () {
+        var self = this;
+        return React.createElement("form", {className: "news-form-block"}, 
+            React.createElement("textarea", {name: "content", id: "id_content", value: self.state.content, onChange: self.initChange}), 
+            React.createElement("div", {className: "info-row"}, 
+                React.createElement("input", {type: "button", onClick: self.submitForm, value: "Save"})
+            )
+        )
+    }
+});
+
+var NewsItemBlock = React.createClass({displayName: "NewsItemBlock",
+    render: function () {
+        return React.createElement("div", {className: "news-item-block"}, 
+        this.props.item.content, 
+            React.createElement("div", {className: "news-item-footer"}, 
+                React.createElement("span", {className: "created-at"}, this.props.item.created_at), 
+                React.createElement("span", {className: "author"}, this.props.item.author)
+            )
+        )
     }
 });
 
@@ -334,7 +399,7 @@ var PedigreePetBlock = React.createClass({displayName: "PedigreePetBlock",
             content = React.createElement("form", null, 
                 React.createElement("div", {className: "info-row"}, 
                     React.createElement("div", {className: "label"}, dog.mother_name.title, ":"), 
-                    React.createElement("input", {type: "date", name: "mother", id: "id_mother", value: self.state.form.mother, onChange: self.initChange.bind(self, 'mother')})
+                    React.createElement("input", {type: "text", name: "mother", id: "id_mother", value: self.state.form.mother, onChange: self.initChange.bind(self, 'mother')})
                 ), 
                 React.createElement("div", {className: "info-row"}, 
                     React.createElement("div", {className: "label"}, dog.father_name.title, ":"), 
