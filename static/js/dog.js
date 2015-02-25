@@ -1,4 +1,5 @@
 var dog = {
+    photo: '',
     full_name: {title: 'Home Name', value: 'Nathan Drake Show Avalanche'},
     home_name: {title: 'Full Name', value: 'Nathan'},
     birthday: {title: 'Birth Day', value: '2012-10-02'},
@@ -70,7 +71,7 @@ var NavbarBlock = React.createClass({
 
 var MainBlock = React.createClass({
     getInitialState: function () {
-        return {active: 0, shown: 0}
+        return {active: 0, shown: 0, toggleMenu: false, acceptPhoto: false}
     },
 
     chooseMenu: function (index) {
@@ -83,6 +84,51 @@ var MainBlock = React.createClass({
         if ($(window).height() >= $(document.body).height()) {
             $('.main-block').css('height', $(window).height() - $('.footer-block').outerHeight() - $('.navbar-block').outerHeight());
         }
+    },
+
+    toggleMenu: function () {
+        this.setState({toggleMenu: !this.state.toggleMenu});
+    },
+
+    initAcceptPhotoChange: function () {
+        this.setState({acceptPhoto: true});
+    },
+
+    initChoosePhoto: function () {
+        $('#id_photo').click();
+    },
+
+    initPhotoChange: function (e) {
+        var self = this;
+        if (e.target.files && e.target.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                //$('#news-images-block').append('<div class="image-cropper"><img src="' + e.target.result + '"/></div>');
+                //$('.dog-photo').attr('src', e.target.result);
+                $('#dog-photo').attr('style', "background-image: url('" + e.target.result + "')");
+                self.toggleMenu();
+                self.initAcceptPhotoChange();
+            };
+            reader.readAsDataURL(e.target.files[0]);
+
+        } else {
+            self.cancelChangePhoto();
+            this.setState({toggleMenu: !this.state.toggleMenu});
+        }
+    },
+
+    cancelChangePhoto: function () {
+        $('#dog-photo').attr('style', "background-image: url('" + dog.photo + "')");
+        this.setState({acceptPhoto: false});
+    },
+
+    submitChangePhoto: function () {
+        var form = this.refs.dog_photo_form.getDOMNode()[0];
+        var data = new FormData(form);
+        console.log(data);
+        this.setState({acceptPhoto: false});
+
     },
 
     render: function () {
@@ -101,11 +147,37 @@ var MainBlock = React.createClass({
             }
             return <MenuInfoBlock class={style} index={index}/>
         });
-        return <div className="main-block">
-            <div className="image-cropper">
-                <img className="dog-photo" src="static/img/P1110558.jpg" />
-            </div>
+        if (dog.photo.indexOf('media') > 0) {
 
+        }
+        var delete_choice = dog.photo.indexOf('media') > 0 ? <li>Delete</li> : '';
+        var toggle_menu = self.state.toggleMenu ? <div className="toggle-menu-block">
+            <ul>
+                <li onClick={self.initChoosePhoto}>Upload</li>
+                {delete_choice}
+            </ul>
+        </div> : '';
+
+        var accept_panel = self.state.acceptPhoto ?
+            <div className='change-photo-panel'>
+                <div className="container">
+                    <input type="button" value="Save" onClick={self.submitChangePhoto} />
+                    <input type="button" value="Cancel" onClick={self.cancelChangePhoto}/>
+                </div>
+            </div> : '';
+
+        return <div className="main-block">
+            <div className="dog-image-block">
+                <div className="container">
+                    <img className="menu-toggle-button" onClick={self.toggleMenu} src="static/img/no_photo.png" />
+                    {toggle_menu}
+                </div>
+                                {accept_panel}
+                <div className="dog-photo" id="dog-photo" style={{'background-image': dog.photos}} ></div>
+                <form ref="dog_photo_form">
+                    <input type="file" name="photo" id="id_photo" onChange={self.initPhotoChange} />
+                </form>
+            </div>
             <div className="name-block">
                 <div className="container">{dog.full_name.value} | {dog.home_name.value}</div>
             </div>
