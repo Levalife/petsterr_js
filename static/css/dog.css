@@ -57,12 +57,14 @@ textarea {
 }
 
 .main-block .content-block .control-block {
-    /*min-width: 20%;*/
-    /*background-color: rgba(201, 192, 176, 0.7);*/
+    /* min-width: 20%; */
+    /* background-color: rgba(201, 192, 176, 0.7); */
     color: #535d6d;
-    border-radius: 5px;
-    /*border-right: 1px dashed #ea6336;*/
-    /*border-right: 1px solid rgba(83, 93, 109, 0.2);*/
+    /* border-radius: 5px; */
+    border-bottom: 1px solid rgba(83, 93, 109, 0.2);
+    /* border-right: 1px dashed #ea6336; */
+    /* border-right: 1px solid rgba(83, 93, 109, 0.2); */
+    margin-bottom: 10px;
 }
 
 .main-block .content-block .control-block ul {
@@ -131,14 +133,14 @@ textarea {
 
 .main-block .content-block .info-block .info-row {
     margin-bottom: 10px;
-    padding: 7px 25px;
+    padding: 5px 0;
 }
 
 .main-block .content-block .info-block .info-row input[type="text"],
 .main-block .content-block .info-block .info-row input[type="date"],
 .main-block .content-block .info-block .info-row select,
 .main-block .content-block .info-block .info-row textarea {
-    width: 70%;
+    width: 78%;
     padding: 4px 10px;
     outline: none;
 }
@@ -149,7 +151,7 @@ textarea {
 }
 
 .main-block .content-block .info-block .info-row select {
-    width: 74%;
+    width: 81%;
 }
 
 .main-block .content-block .info-block .label {
