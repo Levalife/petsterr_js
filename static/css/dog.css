@@ -5,11 +5,12 @@ body {
     /*font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;*/
     /*font-family: Helvetica, Arial, 'lucida grande',tahoma,verdana,arial,sans-serif;*/
     font-family: "open_sanslight", tahoma, verdana, arial, sans-serif;
+    min-height: 100%;
 }
 
 textarea {
-    border-color: #535d6d;
-    border-radius: 5px;
+    border-color: rgba(83, 93, 109, 0.4);
+    /*border-radius: 5px;*/
     outline: none;
 }
 
@@ -18,7 +19,7 @@ textarea {
     margin: 0 auto;
 }
 
-.navbar {
+.navbar-block {
     height: 50px;
     width: 100%;
     background-color: #a5967a;
@@ -26,7 +27,7 @@ textarea {
     line-height: 50px;
 }
 
-.navbar .logo {
+.navbar-block .logo {
     vertical-align: middle;
     font-size: 28px;
 }
@@ -52,26 +53,29 @@ textarea {
     background-color: #fff;
     min-height: 100px;
     margin: 20px 0;
-    display: flex;
+    /*display: flex;*/
 }
 
 .main-block .content-block .control-block {
-    width: 25%;
+    /*min-width: 20%;*/
     /*background-color: rgba(201, 192, 176, 0.7);*/
     color: #535d6d;
     border-radius: 5px;
-    border-right: 1px dashed #ea6336;
+    /*border-right: 1px dashed #ea6336;*/
+    /*border-right: 1px solid rgba(83, 93, 109, 0.2);*/
 }
 
 .main-block .content-block .control-block ul {
     list-style-type: none;
-    margin: 0;
+    margin: 5px 0;
     padding: 0;
+    display: flex;
 }
 
 .main-block .content-block .control-block ul li {
     padding: 7px 40px;
-    font-size: 14px;
+    font-size: 16px;
+    margin: 0 auto;
 }
 
 .main-block .content-block .control-block ul li:hover {
@@ -80,6 +84,7 @@ textarea {
 }
 
 .main-block .content-block .control-block .active {
+    color: #ea6336;
     /*background-color: rgba(165, 150, 122, 0.7);*/
 }
 
@@ -88,10 +93,11 @@ textarea {
 }
 
 .main-block .content-block .info-block {
-    color: #909498;
-    padding: 7px 50px;
-    width: 70%;
+    color: rgba(83, 93, 109, 0.9);
+    padding: 7px 40px;
+    /*width: 70%;*/
     position: relative;
+
 }
 
 .main-block .content-block .info-block input[type="button"] {
@@ -101,8 +107,8 @@ textarea {
     font-size: 14px;
     border: 0;
     border-radius: 5px;
-    margin: 5px 0 0 10px;
-    float: right;
+    margin: 5px;
+    /*float: right;*/
     cursor: pointer;
     outline: none;
 }
@@ -125,6 +131,7 @@ textarea {
 
 .main-block .content-block .info-block .info-row {
     margin-bottom: 10px;
+    padding: 7px 25px;
 }
 
 .main-block .content-block .info-block .info-row input[type="text"],
@@ -133,6 +140,7 @@ textarea {
 .main-block .content-block .info-block .info-row textarea {
     width: 70%;
     padding: 4px 10px;
+    outline: none;
 }
 
 .main-block .content-block .info-block .info-row textarea {
@@ -148,11 +156,13 @@ textarea {
     display: inline-block;
     width: 150px;
     vertical-align: top;
+    font-size: 11px;
+    color: rgba(83, 93, 109, 0.7);
 }
 
 .info-block #tab_0, .info-block #tab_1, .info-block #tab_2, .info-block #tab_3, .info-block #tab_4 {
     display: none;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .info-block .show {
@@ -172,36 +182,70 @@ textarea {
 }
 
 .news-form-block {
-    width: 85%;
-    padding: 20px;
+    /*width: 85%;*/
     margin: 0 auto;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .news-form-block textarea {
-    width: 100%;
+    width: 99%;
     min-height: 50px;
     resize: vertical;
+    margin: 0;
 }
 
 .news-item-block {
-    background-color: rgba(163, 170, 180, 0.2);
+    /*background-color: rgba(163, 170, 180, 0.2);*/
     color: #535d6d;
-    width: 80%;
     min-height: 100px;
     padding: 20px;
     margin: 0 auto;
     margin-bottom: 20px;
     position: relative;
-    border-radius: 5px;
+    /*border-radius: 5px;*/
     font-size: 14px;
+    border-bottom: 1px solid rgba(83, 93, 109, 0.2);
+}
+
+.news-form-buttons {
+    background-color: rgba(228, 231, 234, 0.4);
+}
+
+.news-form-buttons input[type="button"] {
+    float: right;
+}
+
+.news-form-buttons .news-images-block {
+    display: -webkit-box;
+}
+
+.news-form-buttons .news-images-block .image-cropper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    overflow: initial;
+    margin: 3px;
+    background-size: cover;
+}
+
+.news-form-buttons .news-images-block .image-cropper img {
+    width: 120px;
+}
+
+
+.news-form-block #id_photos {
+    width: 1px;
+    height: 1px;
+    visibility: hidden;
+    float: left;
 }
 
 .news-item-footer {
     position: absolute;
     bottom: 20px;
     width: 90%;
-    font-size: 12px;
+    font-size: 10px;
+    color: rgba(83, 93, 109, 0.7);
 }
 
 .news-item-footer span:hover {
@@ -212,6 +256,15 @@ textarea {
 .news-item-footer .author {
     position: absolute;
     right: 0;
+}
+
+.news-form-buttons .photo-button {
+    width: 50px;
+}
+
+.news-form-buttons .photo-button:hover {
+    opacity: 0.7;
+    cursor: pointer;
 }
 
 .footer-block {

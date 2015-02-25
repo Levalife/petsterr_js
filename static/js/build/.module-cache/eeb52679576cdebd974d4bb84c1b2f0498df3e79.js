@@ -59,7 +59,7 @@ var PageBlock = React.createClass({displayName: "PageBlock",
 
 var NavbarBlock = React.createClass({displayName: "NavbarBlock",
     render: function () {
-        return React.createElement("div", {className: "navbar"}, 
+        return React.createElement("div", {className: "navbar-block"}, 
             React.createElement("div", {className: "container"}, 
                 React.createElement("div", {className: "logo"}, "PetsTeRR")
 
@@ -75,6 +75,14 @@ var MainBlock = React.createClass({displayName: "MainBlock",
 
     chooseMenu: function (index) {
         this.setState({active: index, shown: index});
+        $('.main-block').css('height', '');
+
+    },
+
+    componentDidUpdate: function () {
+        if ($(window).height() >= $(document.body).height()) {
+            $('.main-block').css('height', $(window).height() - $('.footer-block').outerHeight() - $('.navbar-block').outerHeight());
+        }
     },
 
     render: function () {
@@ -127,7 +135,7 @@ var MenuChoiceBlock = React.createClass({displayName: "MenuChoiceBlock",
 var MenuInfoBlock = React.createClass({displayName: "MenuInfoBlock",
     render: function () {
         var text,
-            self=this;
+            self = this;
         if (this.props.index == 0) {
             text = React.createElement(NewsBlock, {index: self.props.index})
         }
@@ -160,7 +168,7 @@ var NewsBlock = React.createClass({displayName: "NewsBlock",
 
 var NewsForm = React.createClass({displayName: "NewsForm",
     getInitialState: function () {
-        return {content: ''}
+        return {content: '', buttons: false, photos: true}
     },
 
     componentWillUpdate: function () {
@@ -175,17 +183,59 @@ var NewsForm = React.createClass({displayName: "NewsForm",
     },
 
     submitForm: function () {
-        var data = {content: this.state.content};
+        var form = $(this.refs.news_form.getDOMNode())[0];
+        var data = new FormData(form);
+        //var data = {content: this.state.content};
         console.log(data);
     },
 
-    render: function () {
+    initShowButtons: function () {
+        this.setState({buttons: true});
+    },
+
+    initShowPhotos: function () {
+        //this.setState({photos: true});
+        $('#id_photos').click();
+    },
+
+    initImageChange: function (e) {
         var self = this;
-        return React.createElement("form", {className: "news-form-block"}, 
-            React.createElement("textarea", {name: "content", id: "id_content", value: self.state.content, onChange: self.initChange}), 
-            React.createElement("div", {className: "info-row"}, 
+        $('#news-images-block').html('').attr('style', "overflow: scroll");
+        if (e.target.files) {
+            var file_length = e.target.files.length;
+            for (var i = 0; i < file_length; i++) {
+                var reader = new FileReader();
+                console.log(e.target.name);
+
+                reader.onload = function (e) {
+                    //$('#news-images-block').append('<div class="image-cropper"><img src="' + e.target.result + '"/></div>');
+                    $('#news-images-block').append('<div class="image-cropper"></div>');
+                    $('.image-cropper:last-child').attr('style', "background-image: url('" + e.target.result + "')");
+                };
+                reader.readAsDataURL(e.target.files[i]);
+
+            }
+        } else {
+        }
+    },
+
+    render: function () {
+        var self = this,
+            buttons = this.state.buttons ? React.createElement("div", {className: "news-form-buttons"}, 
+                React.createElement("div", {className: "news-images-block", id: "news-images-block"}), 
+                React.createElement("img", {className: "photo-button", src: "static/img/no_photo.png", onClick: this.initShowPhotos}), 
+
                 React.createElement("input", {type: "button", onClick: self.submitForm, value: "Save"})
-            )
+
+            ) : '',
+            photos = this.state.photos ?
+                React.createElement("input", {type: "file", id: "id_photos", name: "photos", multiple: true, onChange: this.initImageChange}) : '';
+        return React.createElement("form", {className: "news-form-block", ref: "news_form"}, 
+            React.createElement("textarea", {name: "content", id: "id_content", value: self.state.content, onChange: self.initChange, onClick: self.initShowButtons}), 
+            self.state.photos_img, 
+            buttons, 
+            photos
+
         )
     }
 });
@@ -367,6 +417,7 @@ var PedigreePetBlock = React.createClass({displayName: "PedigreePetBlock",
 
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
+
     },
 
     initChange: function (key, e) {
@@ -471,8 +522,16 @@ var AchievementsPetBlock = React.createClass({displayName: "AchievementsPetBlock
         }
     },
 
+    componentDidUpdate: function () {
+        if ($(window).height() >= $(document.body).height()) {
+            $('.main-block').css('height', $(window).height() - $('.footer-block').outerHeight() - $('.navbar-block').outerHeight());
+        }
+    },
+
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
+        $('.main-block').css('height', '');
+
     },
 
     initChange: function (key, e) {
@@ -543,8 +602,18 @@ var HealthPetBlock = React.createClass({displayName: "HealthPetBlock",
         }
     },
 
+    componentDidUpdate: function () {
+        if ($(window).height() >= $(document.body).height()) {
+            $('.main-block').css('height', $(window).height() - $('.footer-block').outerHeight() - $('.navbar-block').outerHeight());
+        } else {
+            $('.main-block').css('height', '');
+        }
+    },
+
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
+        $('.main-block').css('height', '');
+
     },
 
     cancelShowForm: function () {

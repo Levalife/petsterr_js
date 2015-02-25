@@ -59,7 +59,7 @@ var PageBlock = React.createClass({
 
 var NavbarBlock = React.createClass({
     render: function () {
-        return <div className="navbar">
+        return <div className="navbar-block">
             <div className="container">
                 <div className="logo">PetsTeRR</div>
 
@@ -75,6 +75,14 @@ var MainBlock = React.createClass({
 
     chooseMenu: function (index) {
         this.setState({active: index, shown: index});
+        $('.main-block').css('height', '');
+
+    },
+
+    componentDidUpdate: function () {
+        if ($(window).height() >= $(document.body).height()) {
+            $('.main-block').css('height', $(window).height() - $('.footer-block').outerHeight() - $('.navbar-block').outerHeight());
+        }
     },
 
     render: function () {
@@ -127,7 +135,7 @@ var MenuChoiceBlock = React.createClass({
 var MenuInfoBlock = React.createClass({
     render: function () {
         var text,
-            self=this;
+            self = this;
         if (this.props.index == 0) {
             text = <NewsBlock index={self.props.index} />
         }
@@ -160,7 +168,7 @@ var NewsBlock = React.createClass({
 
 var NewsForm = React.createClass({
     getInitialState: function () {
-        return {content: ''}
+        return {content: '', buttons: false, photos: true}
     },
 
     componentWillUpdate: function () {
@@ -175,17 +183,59 @@ var NewsForm = React.createClass({
     },
 
     submitForm: function () {
-        var data = {content: this.state.content};
+        var form = $(this.refs.news_form.getDOMNode())[0];
+        var data = new FormData(form);
+        //var data = {content: this.state.content};
         console.log(data);
     },
 
-    render: function () {
+    initShowButtons: function () {
+        this.setState({buttons: true});
+    },
+
+    initShowPhotos: function () {
+        //this.setState({photos: true});
+        $('#id_photos').click();
+    },
+
+    initImageChange: function (e) {
         var self = this;
-        return <form className="news-form-block">
-            <textarea name="content" id="id_content" value={self.state.content} onChange={self.initChange}></textarea>
-            <div className="info-row">
+        $('#news-images-block').html('').attr('style', "overflow: scroll");
+        if (e.target.files) {
+            var file_length = e.target.files.length;
+            for (var i = 0; i < file_length; i++) {
+                var reader = new FileReader();
+                console.log(e.target.name);
+
+                reader.onload = function (e) {
+                    //$('#news-images-block').append('<div class="image-cropper"><img src="' + e.target.result + '"/></div>');
+                    $('#news-images-block').append('<div class="image-cropper"></div>');
+                    $('.image-cropper:last-child').attr('style', "background-image: url('" + e.target.result + "')");
+                };
+                reader.readAsDataURL(e.target.files[i]);
+
+            }
+        } else {
+        }
+    },
+
+    render: function () {
+        var self = this,
+            buttons = this.state.buttons ? <div className="news-form-buttons">
+                <div className="news-images-block" id="news-images-block"></div>
+                <img className="photo-button" src="static/img/no_photo.png" onClick={this.initShowPhotos} />
+
                 <input type="button" onClick={self.submitForm} value="Save"/>
-            </div>
+
+            </div> : '',
+            photos = this.state.photos ?
+                <input type="file" id="id_photos" name="photos" multiple onChange={this.initImageChange} /> : '';
+        return <form className="news-form-block" ref="news_form">
+            <textarea name="content" id="id_content" value={self.state.content} onChange={self.initChange} onClick={self.initShowButtons}></textarea>
+            {self.state.photos_img}
+            {buttons}
+            {photos}
+
         </form>
     }
 });
@@ -367,6 +417,7 @@ var PedigreePetBlock = React.createClass({
 
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
+
     },
 
     initChange: function (key, e) {
@@ -471,8 +522,16 @@ var AchievementsPetBlock = React.createClass({
         }
     },
 
+    componentDidUpdate: function () {
+        if ($(window).height() >= $(document.body).height()) {
+            $('.main-block').css('height', $(window).height() - $('.footer-block').outerHeight() - $('.navbar-block').outerHeight());
+        }
+    },
+
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
+        $('.main-block').css('height', '');
+
     },
 
     initChange: function (key, e) {
@@ -543,8 +602,18 @@ var HealthPetBlock = React.createClass({
         }
     },
 
+    componentDidUpdate: function () {
+        if ($(window).height() >= $(document.body).height()) {
+            $('.main-block').css('height', $(window).height() - $('.footer-block').outerHeight() - $('.navbar-block').outerHeight());
+        } else {
+            $('.main-block').css('height', '');
+        }
+    },
+
     changeShowForm: function () {
         this.setState({show_form: !this.state.show_form});
+        $('.main-block').css('height', '');
+
     },
 
     cancelShowForm: function () {
